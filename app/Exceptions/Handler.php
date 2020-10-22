@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -13,7 +16,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        CustomException::class
     ];
 
     /**
@@ -50,6 +53,20 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof ValidationException) {
+            $message = '参数无效';
+            $errors = $exception->errors();
+            if ($errors) {
+                $message = current($errors)[0];
+            }
+            return response()->json([
+                'message' => $message
+            ])->setStatusCode(422);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            return xm_res(404, '资源不存在');
+        }
         return parent::render($request, $exception);
     }
 }

@@ -13,7 +13,7 @@ class LoginRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,44 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
+        $actionName = strtolower($this->getMethod()) . '_' . $this->route()->getActionMethod();
+        return $this->$actionName();
+    }
+
+    /**
+     * Desc: 登录校验
+     * Author: xinu
+     * Time: 2020-10-21 9:45
+     * @return array
+     */
+    public function post_index()
+    {
         return [
-            //
+            'username' => 'required|string',
+            'password' => 'required',
         ];
+    }
+
+    public function put_update()
+    {
+        return [];
+    }
+
+    public function get_index()
+    {
+        return [];
+    }
+
+    public function _messages()
+    {
+        return [
+            'username.required' => "帐号必填",
+            'password.required' => "密码必填",
+        ];
+    }
+
+    public function __call($name, $args)
+    {
+        return [];
     }
 }
