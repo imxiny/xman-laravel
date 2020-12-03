@@ -19,6 +19,7 @@ class EnableCors
         $origin = $request->server('HTTP_ORIGIN') ?: '';
         $allow_origin = [
             'http://localhost:1234',
+            'http://localhost:8080',
         ];
         if (in_array($origin, $allow_origin, true)) {
             $response->header('Access-Control-Allow-Origin', $origin);

@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['adi/*'],
+    'paths' => ['adi/*', 'api/*'],
 
     'allowed_methods' => ['*'],
 
@@ -25,7 +25,7 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['X-Token'],
 
     'max_age' => 0,
 

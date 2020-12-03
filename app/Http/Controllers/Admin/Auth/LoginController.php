@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Exceptions\CustomException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
+use App\Http\Requests\Admin\Auth\LoginRequest;
 use App\Http\Services\LoginService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

@@ -8,6 +8,7 @@
  */
 
 use App\Http\Controllers\Admin\Auth\AuthController;
+use App\Http\Controllers\Admin\Auth\GroupController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RuleContrller;
 use App\Http\Middleware\AuthXm;
@@ -23,7 +24,10 @@ Route::name('auth_system.')->middleware(AuthXm::class)->group(static function ()
     Route::apiResource('/rules', RuleContrller::class);
     // 获取规则的父级关系
     Route::get('/rule/options', RuleContrller::class . '@pidTree');
-
+    // 授权使用的tree
+    Route::get('/rule/tree', RuleContrller::class . '@tree');
+    // 角色组 增删改查 + 授权
+    Route::apiResource('/groups', GroupController::class);
     // 登出
     Route::delete('/logout', LoginController::class . '@logout')->name('logout');
 });

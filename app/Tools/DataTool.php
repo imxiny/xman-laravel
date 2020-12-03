@@ -22,7 +22,7 @@ final class DataTool
      * @param string $title
      * @return array
      */
-    public static function tree(array $data, $parentField = 'pid', $childField = 'id', $title = 'title')
+    public static function tree(array $data, $parentField = 'pid', $childField = 'id', $title = 'title'): array
     {
         // 判断是否存在 pid = 0 根节点，如果不存在根节点，无法处理
         $pids = array_unique(array_column($data, $parentField));

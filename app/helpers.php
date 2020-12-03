@@ -119,21 +119,47 @@ if (!function_exists('xm_recursion_query')) {
 }
 
 if (!function_exists('xm_query_children')) {
-    function xm_query_children () {
-        $sql = 'SELECT u2.rule_id
+    /**
+     * Desc: 无限级结构中 根据父级id查所有孩子
+     * Author: xinu
+     * Time: 2020-10-22 20:20
+     * @param string $table 表
+     * @param string $parentField
+     * @param string $childField
+     * @param int $id
+     * @param string $extraWhere 额外的条件
+     * @param bool $containSelf
+     * @return array
+     */
+    function xm_query_children(string $table, string $parentField, string $childField, int $id, string $extraWhere = '', bool $containSelf = true)
+    {
+        $table = config('database.connections.mysql.prefix', '') . $table;
+        $sql = "SELECT" . " u2.`{$childField}`
 FROM (
-SELECT rule_id,
+SELECT `{$childField}`,
 @ids                           AS p_ids,
-(SELECT @ids := GROUP_CONCAT(rule_id)
-FROM xm_auth_rules
-WHERE FIND_IN_SET(pid, @ids)) AS c_ids,
+(SELECT @ids := GROUP_CONCAT(`{$childField}`)
+FROM `{$table}`
+WHERE FIND_IN_SET(`{$parentField}`, @ids)) AS c_ids,
 @l := @l + 1                   AS LEVEL
-FROM xm_auth_rules,
-(SELECT @ids := 1, @l := 0) b
+FROM `{$table}`,
+(SELECT @ids := {$id}, @l := 0) b
 WHERE @ids IS NOT NULL
 ) u1
-JOIN xm_auth_rules u2
-ON FIND_IN_SET(u2.rule_id, u1.p_ids);';
+JOIN `{$table}` u2
+ON FIND_IN_SET(u2.`{$childField}`, u1.p_ids)";
+        if (!$containSelf) {
+            $sql .= " where u2.`{$childField}` != {$id}";
+        }
+        if ($extraWhere) {
+            if (false !== strpos($sql, 'where')) {
+                $sql .= " and " . $extraWhere;
+            } else {
+                $sql .= ' where ' . $extraWhere;
+            }
+        }
+        $list = DB::select($sql);
+        return array_column($list, $childField);
     }
 }
 

@@ -49,7 +49,7 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             SetHeader::class, // 追加 accept: application/json 头，保证返回的数据都是json格式
-//            EnableCors::class,
+            // EnableCors::class,
         ]
     ];
 
